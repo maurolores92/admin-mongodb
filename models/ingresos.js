@@ -4,7 +4,7 @@ const ingresosSchema = new mongoose.Schema({
     id: Number,
     nameCost: String,
     amount: Number,
-    createdDate: String
+    createDate: String
   });
 
 const Ingresos = mongoose.model('ingresos', ingresosSchema);
