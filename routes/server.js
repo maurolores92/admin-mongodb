@@ -3,9 +3,8 @@ const cors = require('cors');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Gastos = require('../models/gastos');
-const Ingresos = require('../models/ingresos'); 
+const Ingresos = require('../models/ingresos');
 const app = express();
-
 
 const user = 'maurolores92';
 const password = 'HiXVJResJEW0NesK';
@@ -19,16 +18,20 @@ mongoose.connect(mongoURI, {
   useUnifiedTopology: true,
 });
 
-
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Error de conexión a la base de datos:'));
 db.once('open', () => {
   console.log('Conexión exitosa a la base de datos');
 });
 
+// Generar un ID único
+function generateUniqueID() {
+  return Math.floor(Math.random() * 1000);
+}
+
 app.get('/gastos', async (req, res) => {
   try {
-    const gastos = await Gastos.find(); 
+    const gastos = await Gastos.find();
     res.json(gastos);
   } catch (err) {
     console.error('Error al obtener gastos:', err);
@@ -41,7 +44,11 @@ app.post('/gastos', async (req, res) => {
     const newGasto = new Gastos({
       nameCost: req.body.nameCost,
       amount: req.body.amount,
+      createDate: new Date(),
     });
+
+    newGasto.id = generateUniqueID();
+
     const savedGasto = await newGasto.save();
 
     res.status(201).json(savedGasto);
@@ -61,8 +68,26 @@ router.get('/ingresos', async (req, res) => {
   }
 });
 
-app.use('/', router);
+app.post('/ingresos', async (req, res) => {
+  try {
+    const newIngreso = new Ingresos({
+      nameCost: req.body.nameCost,
+      amount: req.body.amount,
+      createDate: new Date(),
+    });
 
+    newIngreso.id = generateUniqueID();
+
+    const savedIngreso = await newIngreso.save();
+
+    res.status(201).json(savedIngreso);
+  } catch (err) {
+    console.error('Error al agregar ingreso:', err);
+    res.status(500).json({ error: 'Error al agregar ingreso' });
+  }
+});
+
+app.use('/', router);
 app.listen(3001, () => {
   console.log('Servidor en ejecución en el puerto 3001');
 });
