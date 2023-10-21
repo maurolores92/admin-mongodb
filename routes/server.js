@@ -86,6 +86,26 @@ app.post('/ingresos', async (req, res) => {
   }
 });
 
+app.delete('/ingresos/:id', async (req, res) => {
+  const ingresoId = req.params.id;
+
+  try {
+    const deletedIngreso = await Ingresos.findOneAndDelete({ id: ingresoId });
+
+    if (deletedIngreso) {
+      res.status(200).json(deletedIngreso);
+    } else {
+      res.status(404).json({ error: 'Ingreso no encontrado' });
+    }
+  } catch (err) {
+    console.error('Error al eliminar el ingreso:', err);
+    res.status(500).json({ error: 'Error al eliminar el ingreso' });
+  }
+});
+
+const api = require('./api');
+app.use('/', api);
+
 app.use('/', router);
 app.listen(3001, () => {
   console.log('Servidor en ejecución en el puerto 3001');
