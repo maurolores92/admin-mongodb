@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 
 const gastosSchema = new mongoose.Schema({
-  nameCost: String,
-  amount: Number,
-}, {
-  timestamps: true,
-});
+  id: Number,
+    nameCost: String,
+    amount: Number,
+    createDate: String
+  });
 
-module.exports = mongoose.model('Gastos', gastosSchema);
+const Gastos = mongoose.model('gastos', gastosSchema);
+
+module.exports = Gastos;

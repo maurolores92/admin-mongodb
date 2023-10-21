@@ -24,18 +24,27 @@ db.once('open', () => {
   console.log('Conexión exitosa a la base de datos');
 });
 
-// Generar un ID único
 function generateUniqueID() {
   return Math.floor(Math.random() * 1000);
 }
 
-app.get('/gastos', async (req, res) => {
+router.get('/gastos', async (req, res) => {
   try {
     const gastos = await Gastos.find();
     res.json(gastos);
   } catch (err) {
     console.error('Error al obtener gastos:', err);
     res.status(500).json({ error: 'Error al obtener gastos' });
+  }
+});
+
+router.get('/ingresos', async (req, res) => {
+  try {
+    const ingresos = await Ingresos.find();
+    res.json(ingresos);
+  } catch (err) {
+    console.error('Error al obtener ingresos:', err);
+    res.status(500).json({ error: 'Error al obtener ingresos' });
   }
 });
 
@@ -55,16 +64,6 @@ app.post('/gastos', async (req, res) => {
   } catch (err) {
     console.error('Error al agregar gasto:', err);
     res.status(500).json({ error: 'Error al agregar gasto' });
-  }
-});
-
-router.get('/ingresos', async (req, res) => {
-  try {
-    const ingresos = await Ingresos.find();
-    res.json(ingresos);
-  } catch (err) {
-    console.error('Error al obtener ingresos:', err);
-    res.status(500).json({ error: 'Error al obtener ingresos' });
   }
 });
 
